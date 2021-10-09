@@ -1,4 +1,4 @@
-package br.diolabs.personapi.dto;
+package br.com.diolabs.personapi.dto;
 
 import lombok.Builder;
 import lombok.Data;

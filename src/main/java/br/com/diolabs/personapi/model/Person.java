@@ -1,4 +1,4 @@
-package br.diolabs.personapi.model;
+package br.com.diolabs.personapi.model;
 
 import java.time.LocalDate;
 import java.util.List;
