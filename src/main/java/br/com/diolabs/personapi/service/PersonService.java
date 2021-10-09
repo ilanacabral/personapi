@@ -21,11 +21,12 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
-    private PersonMapper personMapper = PersonMapper.INSTANCE;
+    @Autowired
+    private PersonMapper personMapper;
 
     public MessageResponseDTO savePerson(PersonDTO personDTO) {
         Person person = personRepository.save(personMapper.toModel(personDTO));
-        return MessageResponseDTO.builder().message("Person created with ID " + person.getId()).build();
+        return messageResponseDTO("Person created with ID " + person.getId());
     }
 
     public List<PersonDTO> findAllPerson() {
@@ -41,21 +42,17 @@ public class PersonService {
     public MessageResponseDTO deletePerson(@Valid Long id) {
         this.findPersonById(id);
         personRepository.deleteById(id);
-        return MessageResponseDTO.builder().message("Person ID " + id + " deleted with success.").build();
+        return messageResponseDTO("Person with ID " + id + " deleted with success.");
     }
 
     public MessageResponseDTO updatePerson(@Valid Long id, @Valid PersonDTO personDTO) {
+       this.findPersonById(id); 
+       personRepository.save(personMapper.toModel(personDTO));
+        return messageResponseDTO("Person with ID " + id + " updated with success.");
+    }
 
-        PersonDTO personToUpdate = this.findPersonById(id);
-        personToUpdate.setFirstName(personDTO.getFirstName());
-        personToUpdate.setLastName(personDTO.getLastName());
-        personToUpdate.setCpf(personDTO.getCpf());
-        personToUpdate.setBirthDate(personDTO.getBirthDate());
-        personToUpdate.setPhones(personDTO.getPhones());
-
-        personRepository.save(personMapper.toModel(personToUpdate));
-
-        return MessageResponseDTO.builder().message("Person ID " + id + " updated with success.").build();
+    private MessageResponseDTO messageResponseDTO(String mensagem) {
+        return MessageResponseDTO.builder().message(mensagem).build();
     }
 
 }
